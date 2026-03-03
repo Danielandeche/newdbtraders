@@ -9,7 +9,7 @@
     flex-direction: row;
     height: 100%;
     justify-content: center;
-    padding: 0 1.6rem;
+    padding: 8px 1.6rem;
     width: max-content;
 
     &:hover {
@@ -131,6 +131,7 @@
     &__account-type-header {
         display: flex;
         align-items: center;
+        gap: 0.4rem;
         margin-bottom: 0.2rem;
     }
 
@@ -198,15 +199,15 @@
 
     &__select-arrow {
         pointer-events: none;
+        display: flex;
+        align-items: center;
         transform: rotate(0);
-        transform-origin: 50% 45%;
+        transform-origin: 50% 50%;
         transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
 
-        svg {
-            fill: var(--text-general);
+        svg path {
+            stroke: var(--text-general);
         }
-
-        // @extend %inline-icon;
 
         &--invert {
             transform: rotate(180deg);
@@ -244,13 +245,11 @@
         cursor: not-allowed;
     }
 
-    &--show {
-        .acc-info__select-arrow {
-            transform: rotate(180deg);
-        }
+    &--interactive {
+        cursor: pointer !important;
 
-        .acc-info__select-arrow--invert {
-            transform: rotate(0deg);
+        &:hover {
+            background: var(--state-hover) !important;
         }
     }
 
@@ -719,6 +718,57 @@
     &--disabled {
         opacity: 0.5;
         cursor: not-allowed;
+    }
+}
+
+/** @define acc-dropdown */
+.acc-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    z-index: 3;
+    min-width: 16rem;
+    background-color: var(--general-main-2);
+    border-radius: $BORDER_RADIUS;
+    box-shadow: 0 8px 16px 0 var(--shadow-menu);
+    overflow: hidden;
+
+    &__account {
+        display: flex;
+        flex-direction: column;
+        padding: .8rem 1.6rem;
+        cursor: pointer;
+        background: var(--general-main-2);
+
+        &:not(:last-child) {
+            border-bottom: 1px solid var(--general-section-1);
+        }
+
+        &:hover:not(.acc-dropdown__account--selected) {
+            background: var(--state-hover);
+        }
+
+        &--selected {
+            background: var(--state-active);
+            cursor: default;
+        }
+    }
+
+    &__account-type {
+        color: var(--status-success);
+        margin-bottom: 0.1rem;
+        line-height: 1.2;
+        font-size: 1.4rem;
+
+        &--virtual {
+            color: $color-yellow;
+        }
+    }
+
+    &__balance {
+        color: var(--text-prominent);
+        line-height: 1.4;
+        font-size: 1.2rem;
     }
 }
 
