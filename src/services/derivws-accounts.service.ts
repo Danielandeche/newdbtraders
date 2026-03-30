@@ -56,8 +56,9 @@ export class DerivWSAccountsService {
      * @returns DerivWS base URL (e.g., "https://api.derivws.com/trading/v1/")
      */
     private static getDerivWSBaseURL(): string {
-        const environment = isProduction() ? 'production' : 'staging';
-        return brandConfig.platform.derivws.url[environment];
+        // Always use production API for security
+        // Development urls (localhost, ngrok) should always connect to production
+        return brandConfig.platform.derivws.url.production;
     }
 
     /**

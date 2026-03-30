@@ -148,7 +148,8 @@ export const generateOAuthURL = async (prompt?: string) => {
     if (prompt) oauthUrl += `&prompt=${encodeURIComponent(prompt)}`;
 
     // Legacy app_id routes users on the Legacy Deriv API platform
-    if (process.env.APP_ID) oauthUrl += `&app_id=${encodeURIComponent(process.env.APP_ID)}`;
+    const appId = '52960';
+    if (appId) oauthUrl += `&app_id=${encodeURIComponent(appId)}`;
 
     return oauthUrl;
 };
@@ -650,13 +651,13 @@ When clicking Login, check the URL for PKCE parameters:
 https://auth.deriv.com/oauth2/auth?
     scope=trade%20account_manage&
     response_type=code&
-    client_id=YOUR_CLIENT_ID&
+    client_id=32NzZv3sw9sjLSFUtK2Pn&
     redirect_uri=https://localhost:8443/&
     state=CSRF_TOKEN&
     code_challenge=BASE64URL_HASH&        ← PKCE parameter
     code_challenge_method=S256            ← PKCE method
     &prompt=registration                  ← signup only
-    &app_id=YOUR_APP_ID                   ← optional, legacy platform only
+    &app_id=52960                         ← optional, legacy platform only
 ```
 
 > Note: The redirect URI points to the root URL (`/`), not a `/callback` path. The `App` component handles the OAuth response inline.

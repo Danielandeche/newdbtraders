@@ -240,8 +240,8 @@ Environment variables are injected via RSBuild's `source.define` in `rsbuild.con
 
 | Variable       | Description                              | Example                           |
 | -------------- | ---------------------------------------- | --------------------------------- |
-| `CLIENT_ID`    | OAuth client ID for Deriv authentication | `32izC2lBT4MmiSNWuxq2l`           |
-| `APP_ID`       | Legacy Deriv API app ID (optional — only needed if you maintain a Legacy Deriv API app) | `12345` |
+| `CLIENT_ID`    | OAuth client ID for Deriv authentication | `32NzZv3sw9sjLSFUtK2Pn` (hardcoded) |
+| `APP_ID`       | Legacy Deriv API app ID (optional — only needed if you maintain a Legacy Deriv API app) | `52960` (hardcoded) |
 | `GD_CLIENT_ID` | Google Drive OAuth client                | `xxxx.apps.googleusercontent.com` |
 | `GD_APP_ID`    | Google Drive app ID                      | `123456789`                       |
 | `GD_API_KEY`   | Google Drive API key                     | `AIza...`                         |

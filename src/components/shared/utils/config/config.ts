@@ -1,5 +1,6 @@
 import { DerivWSAccountsService } from '@/services/derivws-accounts.service';
 import { OAuthTokenExchangeService } from '@/services/oauth-token-exchange.service';
+import { getCurrentClientID, getCurrentLegacyAppID } from '@/config/domain-app-ids';
 import brandConfig from '../../../../../brand.config.json';
 
 // =============================================================================
@@ -36,16 +37,16 @@ export const isProduction = () => {
 export const isLocal = () => /localhost(:\d+)?$/i.test(window.location.hostname);
 
 const getDefaultServerURL = () => {
-    const isProductionEnv = isProduction();
-
+    // Always use production WebSocket server for security
+    // Development urls (localhost, ngrok) should always connect to production
     try {
-        return isProductionEnv ? WS_SERVERS.PRODUCTION : WS_SERVERS.STAGING;
+        return WS_SERVERS.PRODUCTION;
     } catch (error) {
         console.error('Error in getDefaultServerURL:', error);
     }
 
-    // Production defaults to demov2, staging/preview defaults to qa194 (demo)
-    return isProductionEnv ? WS_SERVERS.PRODUCTION : WS_SERVERS.STAGING;
+    // Fallback to production
+    return WS_SERVERS.PRODUCTION;
 };
 
 /**
@@ -222,10 +223,11 @@ export const clearCSRFToken = (): void => {
 
 export const generateOAuthURL = async (prompt?: string) => {
     try {
-        // Use brand config for login URLs
-        const environment = isProduction() ? 'production' : 'staging';
+        // Use PRODUCTION OAuth endpoints only (not staging)
+        const environment = 'production';
         const hostname = brandConfig?.platform.auth2_url?.[environment];
-        const clientId = process.env.CLIENT_ID;
+        const clientId = getCurrentClientID();
+        const appId = getCurrentLegacyAppID();
 
         if (hostname && clientId) {
             // Generate CSRF token for security
@@ -241,10 +243,10 @@ export const generateOAuthURL = async (prompt?: string) => {
             // Store code verifier for token exchange
             storeCodeVerifier(codeVerifier);
 
-            // Build redirect URL
+            // Build redirect URL (must exactly match URI registered in Deriv OAuth app)
             const protocol = window.location.protocol;
             const host = window.location.host;
-            const redirectUrl = `${protocol}//${host}`;
+            const redirectUrl = `${protocol}//${host}/`;
             const scopes = 'trade';
 
             // Build OAuth URL with PKCE parameters
@@ -259,10 +261,19 @@ export const generateOAuthURL = async (prompt?: string) => {
             }
 
             // Optional: legacy app_id for routing users on the Legacy Deriv API platform
-            const appId = process.env.APP_ID;
             if (appId) {
                 oauthUrl += `&app_id=${encodeURIComponent(appId)}`;
             }
+
+            // DEBUG: Log OAuth parameters for troubleshooting
+            console.log('[OAuth Debug]', {
+                environment,
+                hostname,
+                clientId,
+                redirectUrl,
+                scopes,
+                oauthUrl: oauthUrl.substring(0, 150) + '...' // truncate for readability
+            });
 
             return oauthUrl;
         }

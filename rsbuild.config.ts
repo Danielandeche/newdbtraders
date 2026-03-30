@@ -27,8 +27,9 @@ export default defineConfig({
         define: {
             'process.env': {
                 APP_ENV: JSON.stringify(process.env.APP_ENV),
-                CLIENT_ID: JSON.stringify(process.env.CLIENT_ID),
-                APP_ID: JSON.stringify(process.env.APP_ID),
+                // NOTE: These are legacy fallback values. The runtime domain-based config in @/config/domain-app-ids.ts takes precedence
+                CLIENT_ID: JSON.stringify('32NzZv3sw9sjLSFUtK2Pn'),
+                APP_ID: JSON.stringify('52960'),
                 GD_CLIENT_ID: JSON.stringify(process.env.GD_CLIENT_ID),
                 GD_APP_ID: JSON.stringify(process.env.GD_APP_ID),
                 GD_API_KEY: JSON.stringify(process.env.GD_API_KEY),
@@ -39,6 +40,7 @@ export default defineConfig({
             'react-dom': path.resolve('./node_modules/react-dom'),
             '@/external': path.resolve(__dirname, './src/external'),
             '@/components': path.resolve(__dirname, './src/components'),
+            '@/config': path.resolve(__dirname, './src/config'),
             '@/hooks': path.resolve(__dirname, './src/hooks'),
             '@/utils': path.resolve(__dirname, './src/utils'),
             '@/constants': path.resolve(__dirname, './src/constants'),

@@ -33,11 +33,12 @@ interface AuthInfo {
 export class OAuthTokenExchangeService {
     /**
      * Get the OAuth2 base URL based on environment
-     * @returns OAuth2 base URL (staging or production)
+     * @returns OAuth2 base URL (production only for security)
      */
     private static getOAuth2BaseURL(): string {
-        const environment = isProduction() ? 'production' : 'staging';
-        return brandConfig.platform.auth2_url[environment];
+        // Always use production auth endpoint for security
+        // Development urls (localhost, ngrok) should always authenticate against production
+        return brandConfig.platform.auth2_url.production;
     }
 
     /**
@@ -144,7 +145,7 @@ export class OAuthTokenExchangeService {
 
             const protocol = window.location.protocol;
             const host = window.location.host;
-            const redirectUrl = `${protocol}//${host}`;
+            const redirectUrl = `${protocol}//${host}/`;  // Must match exactly with OAuth login URL
 
             const requestBody = new URLSearchParams({
                 grant_type: 'authorization_code',
@@ -156,7 +157,6 @@ export class OAuthTokenExchangeService {
 
             const response = await fetch(tokenEndpoint, {
                 method: 'POST',
-                credentials: 'include', // Include cookies for session-based auth
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
